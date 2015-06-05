@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:layout_height="match_parent" >
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/tvHeader" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="New Text"
+        android:id="@+id/tvVehicle" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="New Text"
+        android:id="@+id/tvRegistrationDate" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="New Text"
+        android:id="@+id/tvCurrentKilometer" />
+
+
+    <EditText
+        android:layout_width="198dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/etUpdatedKilometer"
+        android:hint="update kilometer here"
+        android:inputType="number"
+        android:ems="10"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="update"
+        android:id="@+id/bUpdateKilometer"
+        android:layout_gravity="right" />
+
+
+
+    <Button
+        android:id="@+id/bLogout"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:text="Logout"
+        android:layout_height="wrap_content" />
+</LinearLayout>
