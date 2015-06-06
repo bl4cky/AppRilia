@@ -59,6 +59,17 @@ public class VehicleLocalStore {
         Log.v("VehicleLocalStore", "vehicle list removed"); //TESTAUSGABE???
     }
 
+    public int getVehicleIdFromType(Context context, String type){
+        ArrayList<Vehicle> vehicleList = getVehicleData(context);
+        int vehicleId = -1;
+
+        for(Vehicle v : vehicleList){
+            if(v.getType().equals(type)){
+                vehicleId = v.getId();
+            }
+        }
+        return vehicleId;
+    }
 
 
 }

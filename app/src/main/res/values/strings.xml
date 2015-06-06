@@ -6,4 +6,5 @@
     <string name="title_activity_register">Register</string>
     <string name="title_activity_profil">Profil</string>
     <string name="title_activity_value_analyse">ValueAnalyse</string>
+    <string name="title_activity_to_do">ToDo</string>
 </resources>

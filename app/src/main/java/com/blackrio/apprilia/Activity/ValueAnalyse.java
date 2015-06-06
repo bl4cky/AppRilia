@@ -2,13 +2,14 @@ package com.blackrio.apprilia.Activity;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.blackrio.apprilia.R;
 
-public class ValueAnalyse extends ActionBarActivity {
+public class ValueAnalyse extends AppCompatActivity {
 
     private TextView tvHeader, tvResidualValue;
 

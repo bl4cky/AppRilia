@@ -4,6 +4,7 @@ package com.blackrio.apprilia.Server;
  * Created by Stefan on 31.05.2015.
  */
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Base64;
@@ -71,7 +72,7 @@ public class ServerRequests {
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! hat am sonntag gefehlt
     //METHODE VEHICLES AUSLESEN
     public void fetchVehicleDataAsyncTask(GetVehicleCallback vehicleCallback){
-        progressDialog.show();
+        //progressDialog.show();
         new FetchVehicleDataAsyncTask(vehicleCallback).execute();
     }
 
@@ -82,18 +83,16 @@ public class ServerRequests {
     }
 
     public void fetchServiceRecordDataAsyncTask(GetServiceRecordCallback serviceRecordCallback){
-        progressDialog.show();
+        //progressDialog.show();
         new FetchServiceRecordDataAsyncTask(serviceRecordCallback).execute();
     }
 
-
-
-    /**
-     * parameter sent to task upon execution progress published during
-     * background computation result of the background computation
-     */
+    public void updateMadeDataInBackground(ServiceRecord serviceRecord){
+        //progressdialog
+        Log.v("SERVER REQUESTS: ", "first method erreicht");
+        new UpdateServiceRecordAsyncTask(serviceRecord).execute();
+    }
 //endregion
-
 
 //region REGISTER storeUser
     /**
@@ -334,7 +333,6 @@ public class ServerRequests {
     }
 //endregion
 
-
 //region FetchServiceRecords
     public class FetchServiceRecordDataAsyncTask extends AsyncTask<Void, Void, ArrayList<ServiceRecord>> {
         GetServiceRecordCallback serviceRecordCallback;
@@ -398,7 +396,7 @@ public class ServerRequests {
                         returnedServiceRecords.add(serviceRecordTemp);
 
 
-                        Log.v("BOOLEAN: ", String.valueOf(myBoolean)); //TESTAUSGABE???
+                        //Log.v("BOOLEAN: ", String.valueOf(myBoolean)); //TESTAUSGABE???
                     }
 
                 } else {
@@ -423,6 +421,40 @@ public class ServerRequests {
 
 //endregion
 
+//region UpdateServiceRecord (MADE)
+    private class UpdateServiceRecordAsyncTask extends AsyncTask<Void,Void,ServiceRecord>{
+        ServiceRecord serviceRecord;
+
+        public UpdateServiceRecordAsyncTask(ServiceRecord serviceRecord) {
+            this.serviceRecord = serviceRecord;
+        }
+
+        @Override
+        protected ServiceRecord doInBackground(Void... params) {
+            String phpFile = "UpdateSR.php";
+            int made;
+
+            //Daten fuer Uebergabe formatieren
+            //WENN MADE VON serviceRecord = true update ihn in der DB zu 0
+
+            if(serviceRecord.isMade()){
+                made = 0;
+            }else{
+                made = 1;
+            }
+
+            //Daten fure Uebergabe vorbereiten
+            ArrayList<NameValuePair> dataToSend = new ArrayList<>();
+            dataToSend.add(new BasicNameValuePair("serviceRecordId", this.serviceRecord.getServiceRecordId() + ""));
+            dataToSend.add(new BasicNameValuePair("made", made + ""));
+
+            //HTTP request ausfuehren (liefert einen HttpResponse zurueck der bei Insert & Update nicht benoetigt wird
+            createHttpConnection(dataToSend, phpFile);
+            Log.v("SERVER REQUEST: ", "MADE GEUPDATET VON ALT: "+ this.serviceRecord.getServiceRecordId() +" AUF NEU: " + made);
+            return null;
+        }
+    }
+//endregion
 
 
 //region HTTP AUFBAU
@@ -451,6 +483,8 @@ public class ServerRequests {
             return null; //im Fehlerfall
         }
     }
+
+
 
 
 //endregion

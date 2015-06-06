@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +28,7 @@ import com.blackrio.apprilia.Bean.Vehicle;
 import java.util.ArrayList;
 
 
-public class Profil extends ActionBarActivity implements View.OnClickListener{
+public class Profil extends AppCompatActivity implements View.OnClickListener{
     //LOCALSTORE USER & VEHICLE
     private UserLocalStore userLocalStore;
     private VehicleLocalStore vehicleLocalStore;
@@ -37,7 +38,7 @@ public class Profil extends ActionBarActivity implements View.OnClickListener{
     //VIEW OBJEKTE
     private TextView tvHeader, tvVehicle, tvCurrentKilometer, tvRegistrationDate;
     private EditText etUpdatedKilometer;
-    private Button bLogout, bUpdateKilometer;
+    private Button bLogout, bUpdateKilometer, bToDo, bDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +53,14 @@ public class Profil extends ActionBarActivity implements View.OnClickListener{
         tvRegistrationDate = (TextView) findViewById(R.id.tvRegistrationDate);
         bLogout = (Button) findViewById(R.id.bLogout);
         bUpdateKilometer = (Button) findViewById(R.id.bUpdateKilometer);
+        bToDo = (Button) findViewById(R.id.bToDo);
+        bDone = (Button) findViewById(R.id.bDone);
 
         //BUTTON onClickListener setzen
         bLogout.setOnClickListener(this);
         bUpdateKilometer.setOnClickListener(this);
+        bToDo.setOnClickListener(this);
+        bDone.setOnClickListener(this);
 
         //LOCALSTOREs instanzieren
         userLocalStore = new UserLocalStore(this);
@@ -68,6 +73,7 @@ public class Profil extends ActionBarActivity implements View.OnClickListener{
 
         //LOCALSTORE's neu laden aus DB:
         storeVehiclesFromDB();
+        storeServiceRecordsFromDb();
     }
 
     @Override
@@ -76,7 +82,6 @@ public class Profil extends ActionBarActivity implements View.OnClickListener{
 
         if (authenticate() == true) {
             displayUserDetails();
-            storeServiceRecordsFromDb();
         }
     }
 
@@ -124,6 +129,20 @@ public class Profil extends ActionBarActivity implements View.OnClickListener{
                     //Inkorrekte User eingabe fuer neuen Kilometerstand
                     showErrorMessage("Please insert a milage bigger than your current one!");
                 }
+                break;
+
+            //CLICK TODO_
+            case R.id.bToDo:
+                Intent toDoIntent = new Intent(this, ToDo.class);
+                toDoIntent.putExtra("filter", "todo");
+                startActivity(toDoIntent);
+                break;
+
+            //CLICK DONE
+            case R.id.bDone:
+                Intent doneIntent = new Intent(this, ToDo.class);
+                doneIntent.putExtra("filter", "done");
+                startActivity(doneIntent);
                 break;
         }
     }
@@ -218,7 +237,7 @@ public class Profil extends ActionBarActivity implements View.OnClickListener{
         //TESTAUSGABE???
         ArrayList<ServiceRecord> testSRList = serviceRecordLocalStore.getServiceRecordData(this);
         for(ServiceRecord item : testSRList){
-            Log.v("SR LOKAL LIST: ", item.getAction() + " " + item.getKilometer());
+            //Log.v("SR LOKAL LIST: ", item.getAction() + " " + item.getKilometer());
         }
     }
 //endregion

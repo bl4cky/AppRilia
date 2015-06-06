@@ -1,5 +1,7 @@
 package com.blackrio.apprilia.Bean;
 
+import com.blackrio.apprilia.LocalStore.UserLocalStore;
+
 /**
  * Created by Stefan on 04.06.2015.
  */
@@ -81,4 +83,12 @@ public class ServiceRecord {
         this.expectedPrice = expectedPrice;
         this.actualPrice = actualPrice;
     }
+
+    @Override
+    public String toString() {
+        return String.format(action + " \n\t     at " + kilometer + "km");
+
+    }
+
+
 }

@@ -19,16 +19,16 @@ import com.blackrio.apprilia.Bean.User;
 import com.blackrio.apprilia.Bean.Vehicle;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Register extends ActionBarActivity implements View.OnClickListener{
 
     private EditText etFirstname, etLastname, etUsername, etPassword, etKilometer, etRegistrationDate;
     private Spinner spVehicleList;
+    private ArrayAdapter<Vehicle> listAdpapter;
     private Button bRegister;
     private String selectedVehicle;
-    private ArrayList<Vehicle> localVehicleList;
+    private ArrayList<Vehicle> vehicleList;
     //ListView aList;
 
 
@@ -55,20 +55,20 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
         //Vehicle localstore loeschen und neu laden
         vehicleLocalStore = new VehicleLocalStore(this);
-        localVehicleList = vehicleLocalStore.getVehicleData(this);
+        vehicleList = vehicleLocalStore.getVehicleData(this);
 
 
 
 
 //region SPINNER FUER MOTORRAEDER BEFUELLEN
-        ArrayAdapter<Vehicle> listAdpapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, localVehicleList);
+        listAdpapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, vehicleList);
         spVehicleList.setAdapter(listAdpapter);
 
         spVehicleList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int spinnerPosition = spVehicleList.getSelectedItemPosition();
-                selectedVehicle = localVehicleList.get(spinnerPosition).getType();
+                selectedVehicle = vehicleList.get(spinnerPosition).getType();
 
                 Log.v("Spinner vehicle: ", selectedVehicle);
 
@@ -85,7 +85,7 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
 
         //test um ueberpruefen zu koennen ob vehicleLocalStore Werte enthaelt
-        String testString = localVehicleList.get(0).getBrand() + localVehicleList.get(0).getType();
+        String testString = vehicleList.get(0).getBrand() + vehicleList.get(0).getType();
         Log.v("REGISTERACTIVITY", "...hat gefunkt " + testString);
 
 

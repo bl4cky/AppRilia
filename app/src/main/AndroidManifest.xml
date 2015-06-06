@@ -30,6 +30,10 @@
             android:name=".Activity.ValueAnalyse"
             android:label="@string/title_activity_value_analyse" >
         </activity>
+        <activity
+            android:name=".Activity.ToDo"
+            android:label="@string/title_activity_to_do" >
+        </activity>
     </application>
 
 </manifest>

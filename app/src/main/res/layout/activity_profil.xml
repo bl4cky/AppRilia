@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:padding="10dp"
@@ -18,48 +18,86 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:text="New Text"
-        android:id="@+id/tvVehicle" />
+        android:id="@+id/tvVehicle"
+        android:layout_below="@+id/tvRegistrationDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:text="New Text"
-        android:id="@+id/tvRegistrationDate" />
+        android:id="@+id/tvRegistrationDate"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/tvCurrentKilometer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:text="New Text"
-        android:id="@+id/tvCurrentKilometer" />
+        android:id="@+id/tvCurrentKilometer"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/tvHeader"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
     <EditText
         android:layout_width="198dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:id="@+id/etUpdatedKilometer"
         android:hint="update kilometer here"
         android:inputType="number"
         android:ems="10"
-        />
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/tvVehicle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="update"
         android:id="@+id/bUpdateKilometer"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:layout_alignTop="@+id/etUpdatedKilometer"
+        android:layout_alignRight="@+id/bDone"
+        android:layout_alignEnd="@+id/bDone" />
 
 
 
     <Button
         android:id="@+id/bLogout"
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:text="Logout"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="27dp" />
+
+    <Button
+        android:id="@+id/bToDo"
+        android:layout_width="wrap_content"
+        android:text="Services ToDo"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/bDone"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/bDone"
+        android:layout_width="wrap_content"
+        android:text="Service History"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etUpdatedKilometer"
+        android:layout_toRightOf="@+id/bToDo"
+        android:layout_toEndOf="@+id/bToDo"
+        android:layout_marginLeft="37dp"
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="49dp" />
+</RelativeLayout>
