@@ -20,8 +20,9 @@
     <EditText
         android:id="@+id/etFirstname"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_height="wrap_content" />
+
 
     <TextView
         android:text="Lastname"
@@ -31,8 +32,9 @@
     <EditText
         android:id="@+id/etLastname"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_height="wrap_content" />
+
 
     <TextView
         android:text="Username"
@@ -42,8 +44,9 @@
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_height="wrap_content" />
+
 
     <TextView
         android:text="Password"
@@ -54,24 +57,36 @@
         android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:inputType="textPassword"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:text="Choose your Bike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"/>
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spVehicleList" />
+        android:id="@+id/spVehicleList"
+        android:layout_marginBottom="15dp"/>
+
 
     <TextView
         android:text="Driven Kilometers"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
 
     <EditText
         android:id="@+id/etKilometer"
         android:layout_width="match_parent"
-        android:layout_marginBottom="10dp"
+        android:inputType="number"
+        android:layout_marginBottom="15dp"
         android:layout_height="wrap_content" />
+
 
     <TextView
         android:text="Registration Date"
@@ -84,6 +99,7 @@
         android:inputType="date"
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content" />
+
 
     <Button
         android:id="@+id/bRegister"

@@ -27,9 +27,8 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     private EditText etFirstname, etLastname, etUsername, etPassword, etKilometer, etRegistrationDate;
     private Spinner spVehicleList;
     private Button bRegister;
-    private ArrayAdapter<String> vehicleListAdapter;
-    private List<String> listArray;
     private String selectedVehicle;
+    private ArrayList<Vehicle> localVehicleList;
     //ListView aList;
 
 
@@ -39,7 +38,6 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
 
 
         //View und Java Objekte bekannt machen
@@ -52,34 +50,29 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
         etRegistrationDate = (EditText) findViewById(R.id.etRegistrationDate);
         bRegister = (Button) findViewById(R.id.bRegister);
 
+        //BUTTON onClickListener setzen
         bRegister.setOnClickListener(this);
 
         //Vehicle localstore loeschen und neu laden
         vehicleLocalStore = new VehicleLocalStore(this);
-        ArrayList<Vehicle> localVehicleList = vehicleLocalStore.getVehicleData(this);
+        localVehicleList = vehicleLocalStore.getVehicleData(this);
+
+
+
 
 //region SPINNER FUER MOTORRAEDER BEFUELLEN
-        listArray =  new ArrayList<>();
-        // BEFUELLEN DES SPINNERS
-        for(Vehicle item : localVehicleList){
-            listArray.add(item.getBrand() + " " + item.getType());
-        }
-        //vehicleListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listArray);
-        vehicleListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, listArray);
-        spVehicleList.setAdapter(vehicleListAdapter);
+        ArrayAdapter<Vehicle> listAdpapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, localVehicleList);
+        spVehicleList.setAdapter(listAdpapter);
+
         spVehicleList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int spinnerPosition = spVehicleList.getSelectedItemPosition();
+                selectedVehicle = localVehicleList.get(spinnerPosition).getType();
 
-                Log.v("Spinner vehicle:", listArray.get(spinnerPosition));
-
-                Log.v("Spinner vehicle type ", listArray.get(spinnerPosition).split(" ")[1]);
-                //selectedVehicle = listArray.get(spinnerPosition).split(" ")[1];
-                selectedVehicle = listArray.get(spinnerPosition).split(" ", 2)[1];
+                Log.v("Spinner vehicle: ", selectedVehicle);
 
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -89,8 +82,6 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
         //aList = (ListView) findViewById(R.id.lvVehicleList);
         //aList.setAdapter(vehicleListAdapter);
         //aList.setClickable(true);
-
-
 
 
         //test um ueberpruefen zu koennen ob vehicleLocalStore Werte enthaelt
@@ -105,6 +96,8 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
+            //REGISTER CLICK
             case R.id.bRegister:
                 String firstname = etFirstname.getText().toString();
                 String lastname = etLastname.getText().toString();
