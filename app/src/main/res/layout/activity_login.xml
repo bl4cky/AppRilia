@@ -44,4 +44,12 @@
         android:text="Register Here"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/tvServiceInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="Service Info"
+        android:textStyle="bold" />
+
 </LinearLayout>

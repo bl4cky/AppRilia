@@ -60,6 +60,7 @@ public class ServiceRecordLocalStore {
         return (ArrayList) serviceRecordList;
     }
 
+
     //Lokale ServiceRecord liste löschen
     public void clearServiceRecordData() {
         serviceRecordLocalDatabase.edit().remove("SERVICERECORDLIST");
@@ -117,8 +118,25 @@ public class ServiceRecordLocalStore {
 
             }
         }
-
         storeServiceRecordData(userSRList);
+    }
+
+    public ArrayList<ServiceRecord> getVehicleServiceServiceRecords(Vehicle vehicle, Context context){
+
+        //GESAMTE SERVICE LISTE
+        ArrayList<ServiceRecord> vehicleSRList = getServiceRecordData(context);
+        if (vehicleSRList == null) {
+            return null;
+        }
+
+        for(Iterator<ServiceRecord> it = vehicleSRList.iterator(); it.hasNext();){
+            ServiceRecord sr = it.next();
+            //REMOVE Service welches: nicht die uebergebene vehicleID enthalten
+            if (sr.getVehicleId() != vehicle.getId()) {
+                it.remove();
+            }
+        }
+        return vehicleSRList;
     }
 
 }

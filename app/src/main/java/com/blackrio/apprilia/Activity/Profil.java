@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 
 public class Profil extends AppCompatActivity implements View.OnClickListener{
+    Context context;
+
     //LOCALSTORE USER & VEHICLE
     private UserLocalStore userLocalStore;
     private VehicleLocalStore vehicleLocalStore;
@@ -44,6 +46,8 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+
+        this.context = this;
 
         //OBJEKTE aus VIEW mit ACTIVITY bekannt machen
         tvHeader = (TextView) findViewById(R.id.tvHeader);
@@ -65,20 +69,25 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         //LOCALSTOREs instanzieren
         userLocalStore = new UserLocalStore(this);
         serviceRecordLocalStore = new ServiceRecordLocalStore(this);
-        vehicleLocalStore = new VehicleLocalStore(this);
+
 
         //LOCALSTORE's löschen
-        vehicleLocalStore.clearVehicleData();
         serviceRecordLocalStore.clearServiceRecordData();
 
         //LOCALSTORE's neu laden aus DB:
-        storeVehiclesFromDB();
+
         storeServiceRecordsFromDb();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        //VehicleListe aus DB holen und in localstore laden
+        vehicleLocalStore = new VehicleLocalStore(this);
+        vehicleLocalStore.clearVehicleData();
+        storeVehiclesFromDB();
+
 
         if (authenticate() == true) {
             displayUserDetails();
@@ -103,31 +112,42 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
 
             //UPDATE KILOMETER CLICK
             case R.id.bUpdateKilometer:
-                int updatedKm = Integer.parseInt(etUpdatedKilometer.getText().toString());
-                String username = userLocalStore.getLoggedInUser().getUsername();
-                int curKilometer = userLocalStore.getLoggedInUser().getKilometer();
+                //Falls eingabe leer
+                if(etUpdatedKilometer.getText().toString().matches("")){
+                    showErrorMessage("Please don't try to bother us! Fill in a value!");
+                }else {
+                    //Wenn eingabe nicht leer
+                    int updatedKm = Integer.parseInt(etUpdatedKilometer.getText().toString());
+                    String username = userLocalStore.getLoggedInUser().getUsername();
+                    int curKilometer = userLocalStore.getLoggedInUser().getKilometer();
 
-                //Wenn Usereingabe fuer neuen Kilometerstand korrekt
-                if(updatedKm >= curKilometer && updatedKm <=1000000) {
+                    //Wenn Usereingabe fuer neuen Kilometerstand korrekt
+                    if (updatedKm >= curKilometer && updatedKm <= 1000000) {
 
-                    //UPDATE Kilometerstand in DB
-                    ServerRequests serverRequests = new ServerRequests(this);
-                    serverRequests.updateKilometerDataInBackground(username, updatedKm, new GetUpdatedKilometerCallback() {
-                        @Override
-                        public void done(String kilometer) {
-                            //Speicher den neuen Kilometerstand in Localstore
-                            userLocalStore.updateKilometer(Integer.parseInt(kilometer));
-                            Log.v("LOCALSTORE KM NEU: ", Integer.toString(userLocalStore.getLoggedInUser().getKilometer()));//TESTAUSGABE???
+                        //UPDATE Kilometerstand in DB
+                        ServerRequests serverRequests = new ServerRequests(this);
+                        serverRequests.updateKilometerDataInBackground(username, updatedKm, new GetUpdatedKilometerCallback() {
+                            @Override
+                            public void done(String kilometer) {
+                                //Speicher den neuen Kilometerstand in Localstore
+                                int updatedkm = Integer.parseInt(kilometer);
+                                userLocalStore.updateKilometer(updatedkm);
+                                Log.v("LOCALSTORE KM NEU: ", Integer.toString(userLocalStore.getLoggedInUser().getKilometer()));//TESTAUSGABE???
 
-                            tvCurrentKilometer.setText("Driven Kilometers: " + kilometer);
-                            showToastMessage("kilometer update successful");
-                            etUpdatedKilometer.setText("");
-                            etUpdatedKilometer.setHint("update kilometer here");
-                        }
-                    });
-                }else{
-                    //Inkorrekte User eingabe fuer neuen Kilometerstand
-                    showErrorMessage("Please insert a milage bigger than your current one!");
+                                tvCurrentKilometer.setText("Driven Kilometers: " + updatedkm);
+                                showToastMessage("kilometer update successful");
+                                etUpdatedKilometer.setText("");
+                                etUpdatedKilometer.setHint("update kilometer here");
+                                //wenn
+                                if(!serviceRecordLocalStore.getUserServiceRecords(context,"todo",updatedkm , vehicleLocalStore.getVehicleIdFromType(context, userLocalStore.getLoggedInUser().getVehicleType())).isEmpty()){
+                                    showToastMessage("There are Services in your todo-list!");
+                                }
+                            }
+                        });
+                    } else {
+                        //Inkorrekte User eingabe fuer neuen Kilometerstand
+                        showErrorMessage("Please insert a milage bigger than your current one!");
+                    }
                 }
                 break;
 
@@ -152,12 +172,10 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
 
     //Hol Alle Motorraeder aus der DB und storeVehiclesLocal
     private void storeVehiclesFromDB(){
-        Log.v("getVehicles", "methoden beginn"); //TESTAUSGABE
         ServerRequests serverRequest = new ServerRequests(this);
         serverRequest.fetchVehicleDataAsyncTask(new GetVehicleCallback() {
             @Override
             public void done(ArrayList<Vehicle> returnedVehicleList) {
-
                 //Error Message wenn keine Motorraeder in DB gefunden
                 if (returnedVehicleList == null) {
                     showErrorMessage("No Vehicles in db");
@@ -257,7 +275,7 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
 
     //TOAST MESSAGE erwartet String mit benachrichtigungs Message
     private void showToastMessage(String msg) {
-        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 //endregion
 

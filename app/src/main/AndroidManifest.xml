@@ -34,6 +34,10 @@
             android:name=".Activity.ToDo"
             android:label="@string/title_activity_to_do" >
         </activity>
+        <activity
+            android:name=".Activity.ServiceList"
+            android:label="@string/title_activity_sercive_list" >
+        </activity>
     </application>
 
 </manifest>

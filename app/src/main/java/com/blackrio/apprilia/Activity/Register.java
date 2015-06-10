@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.blackrio.apprilia.Callback.GetUserCallback;
+import com.blackrio.apprilia.Helper.DatePickerFragment;
 import com.blackrio.apprilia.LocalStore.VehicleLocalStore;
 import com.blackrio.apprilia.R;
 import com.blackrio.apprilia.Server.ServerRequests;
@@ -29,7 +30,6 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     private Button bRegister;
     private String selectedVehicle;
     private ArrayList<Vehicle> vehicleList;
-    //ListView aList;
 
 
     private VehicleLocalStore vehicleLocalStore;
@@ -52,12 +52,11 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
         //BUTTON onClickListener setzen
         bRegister.setOnClickListener(this);
+        etRegistrationDate.setOnClickListener(this);
 
-        //Vehicle localstore loeschen und neu laden
+        //VehicleListe aus Localstore holen
         vehicleLocalStore = new VehicleLocalStore(this);
         vehicleList = vehicleLocalStore.getVehicleData(this);
-
-
 
 
 //region SPINNER FUER MOTORRAEDER BEFUELLEN
@@ -87,9 +86,6 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
         //test um ueberpruefen zu koennen ob vehicleLocalStore Werte enthaelt
         String testString = vehicleList.get(0).getBrand() + vehicleList.get(0).getType();
         Log.v("REGISTERACTIVITY", "...hat gefunkt " + testString);
-
-
-
     }
 
     //region BUTTON CLICKS
@@ -131,10 +127,4 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
         });
     }
     //endregion
-
-
-
-
-
-
 }

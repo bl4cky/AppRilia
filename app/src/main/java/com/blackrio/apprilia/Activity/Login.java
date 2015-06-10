@@ -3,6 +3,7 @@ package com.blackrio.apprilia.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blackrio.apprilia.Callback.GetUserCallback;
 import com.blackrio.apprilia.Callback.GetVehicleCallback;
@@ -24,13 +26,13 @@ import java.util.ArrayList;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "";
     private Button bLogin;
-    private TextView registerLink;
+    private TextView registerLink, tvServiceInfo;
     private EditText etUsername, etPassword;
 
     private UserLocalStore userLocalStore;
-    private VehicleLocalStore vehicleLocalStore;
-
+    private boolean _doubleBackToExitPressedOnce;
 
 
     @Override
@@ -42,14 +44,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         registerLink = (TextView) findViewById(R.id.tvRegisterLink);
+        tvServiceInfo = (TextView) findViewById(R.id.tvServiceInfo);
 
 
 
         bLogin.setOnClickListener(this);
         registerLink.setOnClickListener(this);
+        tvServiceInfo.setOnClickListener(this);
 
         userLocalStore = new UserLocalStore(this);
-        vehicleLocalStore = new VehicleLocalStore(this);
 
         //Resette Lokale Vehicle Liste und hol Vehicles neu aus DB
 //        vehicleLocalStore.clearVehicleData();
@@ -80,6 +83,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.tvRegisterLink:
                 Intent registerIntent = new Intent(Login.this, Register.class);
                 startActivity(registerIntent);
+                break;
+
+            //Service Info
+            case R.id.tvServiceInfo:
+                Intent serviceInfoIntent = new Intent(this, ServiceList.class);
+                startActivity(serviceInfoIntent);
                 break;
         }
     }
@@ -117,5 +126,25 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         dialogBuilder.show();
     }
 
+    /* Fuer das schließen der APP mit doppel zurück click --> funkt allerdings nicht da (ich denke) von der Login auf die Profil gesprungen wird,
+        da diese ja die start activity ist
+    @Override
+    public void onBackPressed(){
+        Log.i(TAG, "onBackPressed--");
+        if (_doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        this._doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press again to quit", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                _doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
+    }
+*/
 
 }

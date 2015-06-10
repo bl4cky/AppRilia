@@ -27,6 +27,8 @@ import com.blackrio.apprilia.Server.ServerRequests;
 import java.util.ArrayList;
 
 public class ToDo extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
+
+    //View und Java Objekte bekannt machen
     TextView tvHeader;
     Button bFooter;
     ListView lvUserServiceRecords; // meaning: lvToDoServiceRecords
@@ -68,9 +70,9 @@ public class ToDo extends AppCompatActivity implements View.OnClickListener, Ada
         vehicleLocalStore = new VehicleLocalStore(this);
 
         //START
-        if(filter.equals("todo")){
+        if(filter.equals("todo")) {
             setTitle("My To-do list");
-        }else{
+        } else {
             setTitle("My service history");
         }
         curKilometer = userLocalStore.getLoggedInUser().getKilometer();
@@ -80,29 +82,21 @@ public class ToDo extends AppCompatActivity implements View.OnClickListener, Ada
         userServiceRecordList = serviceRecordLocalStore.getUserServiceRecords(this, filter , curKilometer, userVehicleId);
 
 
-        for(ServiceRecord sr : userServiceRecordList){
-            Log.v("ServiceRecod behalten: ", sr.toString() );
-        }
-
-
         serviceRecordAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, userServiceRecordList);
         lvUserServiceRecords.setAdapter(serviceRecordAdapter);
         lvUserServiceRecords.setOnItemClickListener(this);
-
-
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         selectedSR = (ServiceRecord) parent.getItemAtPosition(position);
         Log.v("ITEM: ", selectedSR.toString());
 
-
         //BESTATIGUNGS DIALOG (bei YES --> UPDATE 'made' DB)
         confirmServiceRecord();
-
-
     }
+
 
     @Override
     public void onClick(View v) {
@@ -115,13 +109,14 @@ public class ToDo extends AppCompatActivity implements View.OnClickListener, Ada
         }
     }
 
+
     private void confirmServiceRecord() {
 
         String msg="";
         if(filter.equals("todo")){
-            msg = "Store this Service Record in History ?";
+            msg = "Mark this Service as DONE and Store it in History ?";
         }else{
-            msg= "Do you want to reset this Service Record?";
+            msg= "Do you want to reset this Service ?";
         }
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ToDo.this);
         dialogBuilder.setMessage(msg);

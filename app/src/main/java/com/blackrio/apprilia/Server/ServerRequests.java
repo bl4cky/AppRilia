@@ -365,7 +365,7 @@ public class ServerRequests {
 
                 String result = sb.toString(); // Result is here
                 is.close(); // Close the stream
-                Log.v("FetchServiceRecords: ","result String: " + result); //TESTAUSGABE???
+                Log.v("FetchServiceRecords: ","result String: " + result + "   aaaaaaaa"); //TESTAUSGABE???
 
                 if (result != null) { //Wenn das result nicht leer ist, Convertiere den String in eine VehicleListe
                     Log.v("DOIB FetchServRec: ", "ServicesRecords erhalten als result string");
