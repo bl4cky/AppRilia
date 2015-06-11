@@ -32,13 +32,14 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
     private ArrayList<Vehicle> vehicleList;
 
 
+
     private VehicleLocalStore vehicleLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        setTitle("Register");
 
         //View und Java Objekte bekannt machen
         etFirstname = (EditText) findViewById(R.id.etFirstname);

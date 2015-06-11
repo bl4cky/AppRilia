@@ -1,16 +1,15 @@
 package com.blackrio.apprilia.Activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,7 +30,7 @@ public class ServiceList extends AppCompatActivity implements View.OnClickListen
 
     ListView lvServiceList;
     Spinner spHeader;
-    TextView tvFooter;
+    Button bFooter;
     private ArrayAdapter<Vehicle> spVehicleAdpapter;
     private ArrayAdapter<ServiceRecord> lvServiceAdapter;
     private Vehicle selectedVehicle;
@@ -50,7 +49,7 @@ public class ServiceList extends AppCompatActivity implements View.OnClickListen
         //View und Java Objekte bekannt machen
         lvServiceList = (ListView) findViewById(R.id.lvServiceList);
         spHeader = (Spinner) findViewById(R.id.spHeader);
-        tvFooter = (TextView) findViewById(R.id.tvFooter);
+        bFooter = (Button) findViewById(R.id.bFooter);
 
         //Localstore instanzieren
         vehicleLocalStore = new VehicleLocalStore(this);
@@ -63,7 +62,7 @@ public class ServiceList extends AppCompatActivity implements View.OnClickListen
         spVehicleAdpapter = new ArrayAdapter<>(this,R.layout.support_simple_spinner_dropdown_item, vehicleList);
         spHeader.setAdapter(spVehicleAdpapter);
 
-        tvFooter.setOnClickListener(this);
+        bFooter.setOnClickListener(this);
         spHeader.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
 
             @Override
@@ -80,10 +79,6 @@ public class ServiceList extends AppCompatActivity implements View.OnClickListen
 
             }
         });
-
-
-
-
     }
 
     @Override
@@ -91,44 +86,12 @@ public class ServiceList extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()){
 
             //BACK CLICK
-            case R.id.tvFooter:
+            case R.id.bFooter:
                 Intent loginIntent = new Intent(this, Login.class);
                 startActivity(loginIntent);
                 break;
 
         }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_sercive_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }

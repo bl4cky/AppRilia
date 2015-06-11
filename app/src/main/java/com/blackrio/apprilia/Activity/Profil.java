@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,12 +46,13 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
     //VIEW OBJEKTE
     private TextView tvHeader, tvVehicle, tvCurrentKilometer, tvRegistrationDate, tvCurrentValue;
     private EditText etUpdatedKilometer;
-    private Button bLogout, bUpdateKilometer, bToDo, bDone;
+    private Button bUpdateKilometer, bToDo, bDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+        setTitle("My Profil");
 
         this.context = this;
 
@@ -60,13 +63,11 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         etUpdatedKilometer = (EditText) findViewById(R.id.etUpdatedKilometer);
         tvRegistrationDate = (TextView) findViewById(R.id.tvRegistrationDate);
         tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
-        bLogout = (Button) findViewById(R.id.bLogout);
         bUpdateKilometer = (Button) findViewById(R.id.bUpdateKilometer);
         bToDo = (Button) findViewById(R.id.bToDo);
         bDone = (Button) findViewById(R.id.bDone);
 
         //BUTTON onClickListener setzen
-        bLogout.setOnClickListener(this);
         bUpdateKilometer.setOnClickListener(this);
         bToDo.setOnClickListener(this);
         bDone.setOnClickListener(this);
@@ -99,23 +100,37 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profil, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            userLocalStore.clearUserData();
+            userLocalStore.setUserLoggedIn(false);
+            serviceRecordLocalStore.clearServiceRecordData();
+
+            Intent loginIntent = new Intent(this, Login.class);
+            startActivity(loginIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onClick(View v) {
         switch(v.getId()){
 
-            //LOGOUT CLICK
-            case R.id.bLogout:
-                //LOCALSTORE LÖSCHEN (bis auf Motorrad weil das wird in Register gebraucht und nur beim neustart der APP neu geladen)
-                userLocalStore.clearUserData();
-                userLocalStore.setUserLoggedIn(false);
-                serviceRecordLocalStore.clearServiceRecordData();
-
-                Intent loginIntent = new Intent(this, Login.class);
-                startActivity(loginIntent);
-                break;
-
-            //UPDATE KILOMETER CLICK
+           //UPDATE KILOMETER CLICK
             case R.id.bUpdateKilometer:
                 //Falls eingabe leer
                 if(etUpdatedKilometer.getText().toString().matches("")){
@@ -411,8 +426,6 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         }
         return newValueOfMotorcycle;
     }
-
-
 //endregion
 
 

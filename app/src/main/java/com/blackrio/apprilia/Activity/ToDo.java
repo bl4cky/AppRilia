@@ -162,7 +162,12 @@ public class ToDo extends AppCompatActivity implements View.OnClickListener, Ada
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            userLocalStore.clearUserData();
+            userLocalStore.setUserLoggedIn(false);
+            serviceRecordLocalStore.clearServiceRecordData();
+
+            Intent loginIntent = new Intent(this, Login.class);
+            startActivity(loginIntent);
         }
 
         return super.onOptionsItemSelected(item);
