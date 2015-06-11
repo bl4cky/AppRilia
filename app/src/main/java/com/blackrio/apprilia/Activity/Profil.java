@@ -26,6 +26,9 @@ import com.blackrio.apprilia.Bean.User;
 import com.blackrio.apprilia.Bean.Vehicle;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 
 public class Profil extends AppCompatActivity implements View.OnClickListener{
@@ -36,9 +39,10 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
     private VehicleLocalStore vehicleLocalStore;
     private ServiceRecordLocalStore serviceRecordLocalStore;
     private ServerRequests serverRequests;
+    private Vehicle curVehicle;
 
     //VIEW OBJEKTE
-    private TextView tvHeader, tvVehicle, tvCurrentKilometer, tvRegistrationDate;
+    private TextView tvHeader, tvVehicle, tvCurrentKilometer, tvRegistrationDate, tvCurrentValue;
     private EditText etUpdatedKilometer;
     private Button bLogout, bUpdateKilometer, bToDo, bDone;
 
@@ -55,6 +59,7 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         tvCurrentKilometer = (TextView) findViewById(R.id.tvCurrentKilometer);
         etUpdatedKilometer = (EditText) findViewById(R.id.etUpdatedKilometer);
         tvRegistrationDate = (TextView) findViewById(R.id.tvRegistrationDate);
+        tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
         bLogout = (Button) findViewById(R.id.bLogout);
         bUpdateKilometer = (Button) findViewById(R.id.bUpdateKilometer);
         bToDo = (Button) findViewById(R.id.bToDo);
@@ -142,6 +147,13 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
                                 if(!serviceRecordLocalStore.getUserServiceRecords(context,"todo",updatedkm , vehicleLocalStore.getVehicleIdFromType(context, userLocalStore.getLoggedInUser().getVehicleType())).isEmpty()){
                                     showToastMessage("There are Services in your todo-list!");
                                 }
+                                //temp int damit calculateValue übergabeparameter funktioniert
+                                int temp = new Integer(kilometer);
+                                tvCurrentValue.setText("Current Value of Motorcycle: " + calculateValue(temp, curVehicle.getPrice() )+"€");
+                                //kleines easter egg
+                                if(userLocalStore.getLoggedInUser().getKilometer() >= 300000){
+                                    tvCurrentValue.setText("Bring your Motorcycle to the 'Ludolfs' and hope to get a scrap price!" );
+                                }
                             }
                         });
                     } else {
@@ -216,12 +228,19 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
     //Anzeige beim Starten des Profils (USER spezifische Daten (WENN USER EINGELOGGT)
     private void displayUserDetails() {
         User curUser = userLocalStore.getLoggedInUser();
-        Vehicle curVehicle = getCurVehicle(curUser.getVehicleType());
+        curVehicle = getCurVehicle(curUser.getVehicleType());
 
         tvHeader.setText("Welcome to APPrilia " + curUser.getFirstname() + " " + curUser.getLastname());
         tvVehicle.setText("Motorcycle: "+ curVehicle.getBrand()+ " " + curVehicle.getType());
         tvCurrentKilometer.setText("Driven Kilometers: " + curUser.getKilometer());
         tvRegistrationDate.setText("Motorcycle Registration Date: " + curUser.getRegistrationDate());
+
+        //neupreis ist statisch daher in der class als private int abgespeichert!
+        tvCurrentValue.setText("Current Value of Motorcycle: " + calculateValue(userLocalStore.getLoggedInUser().getKilometer(), curVehicle.getPrice() )+"€");
+        //kleines easter egg
+        if(userLocalStore.getLoggedInUser().getKilometer() >= 300000){
+            tvCurrentValue.setText("Bring your Motorcycle to the 'Ludolfs' and hope to get a scrap price!" );
+        }
     }
 
     //Hol das Aktuelle Motorrad aus dem LocalStore
@@ -278,6 +297,125 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 //endregion
+
+    //region CALCULATIONS
+
+    private int calculateValue(int km, int originalPrice)
+    {
+        //region CALC1 -> "verlust anhand km"
+        //es wird von einer durchschnittlichen lebensdauer von 100.000 km bei einem motorrad ausgegangen
+        int avgLifeCycle = 100000;
+        int startPrice = originalPrice;
+
+        //wertverlust = neupreis/100.000*gefahrenen kilometer
+        float deterioration = ((float)originalPrice/(float)avgLifeCycle)*(float)km;
+
+        //temp gewichtung der ersten berechnung -> wertverlust anhang km auf basis 100.000km
+        double gewichtungTemp = 0.40;
+
+        //neuer wert des motorrad = neupreis - wertverlust
+        double deteriorationGewichtet = (double) deterioration * gewichtungTemp;
+        int deteriorationGewichtetInt = (int) deteriorationGewichtet;
+        int newValueOfMotorcycle = startPrice - deteriorationGewichtetInt;
+        //endregion
+
+        //region CALC2 -> "verlust anhand alter"
+        //bei einer neuanmeldung verliert ein fahrzeug 25% im ersten jahr
+        String regDate = userLocalStore.getLoggedInUser().getRegistrationDate();
+        //Jahreszahl abschneiden
+        String regDateYear = regDate.substring(0,regDate.indexOf('-'));
+        //mach einen int aus dem string
+        int registrationYear = new Integer(regDateYear);
+
+        //Aktuelles Jahr der Systemzeit holen
+        Date date = new Date();
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        int actualYear = calendar.get(Calendar.YEAR);
+
+        int ageOfMotorcycle = actualYear - registrationYear;
+        float tempFactor;
+
+        switch (ageOfMotorcycle){
+            case 0:
+                tempFactor = (originalPrice * 25/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 1:
+                tempFactor = (originalPrice * 26/100);
+                newValueOfMotorcycle = newValueOfMotorcycle  - (int)tempFactor;;
+                break;
+            case 2:
+                tempFactor = (originalPrice * 28/100);
+                newValueOfMotorcycle = newValueOfMotorcycle  - (int)tempFactor;;
+                break;
+            case 3:
+                tempFactor = (originalPrice * 32/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 4:
+                tempFactor = (originalPrice * 36/100);
+                newValueOfMotorcycle = newValueOfMotorcycle  - (int)tempFactor;;
+                break;
+            case 5:
+                tempFactor = (originalPrice * 40/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 6:
+                tempFactor = (originalPrice * 42/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 7:
+                tempFactor = (originalPrice * 43/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 8:
+                tempFactor = (originalPrice * 46/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 9:
+                tempFactor = (originalPrice * 49/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            case 10:
+                tempFactor = (originalPrice * 52/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+            default: //SCHROTTWERT alle über 10 Jahre hat einen Schrottwert von 1000€
+                tempFactor = (originalPrice * 55/100);
+                newValueOfMotorcycle = newValueOfMotorcycle - (int)tempFactor;
+                break;
+        }
+        //endregion "
+
+        //region CALC3 -> "wertsteigerung wenn alle services gemacht"
+
+
+
+
+        //getUserServiceRecords(Context context, String filter, int curkm, int vehicleId)
+        ArrayList<ServiceRecord> tempList = serviceRecordLocalStore.getUserServiceRecords(this, "todo" , km, curVehicle.getId());
+        int temp = tempList.size();
+
+        //wenn alle services "brav" gemacht sind ist das fahrzeug 5% mehr wert
+        if(temp == 0){
+            newValueOfMotorcycle = (int) (newValueOfMotorcycle * 1.05);
+        }
+
+
+        //endregion
+
+        //endueberpruefung falls wert unter 1000 dann setzte ihn auf Schrottwert bzw Teilespenderwert von 1000€
+        if (newValueOfMotorcycle <= 1000){
+            newValueOfMotorcycle = 1000;
+        }
+        return newValueOfMotorcycle;
+    }
+
+
+//endregion
+
+
 
 }
 
