@@ -54,14 +54,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         userLocalStore = new UserLocalStore(this);
 
-        //Resette Lokale Vehicle Liste und hol Vehicles neu aus DB
-//        vehicleLocalStore.clearVehicleData();
-// storeAllVehicles();
-
-        //Wenn noch keine Motorraeder Local abgespeichert sind hol sie aus DB
-
-
-
     }
 
     //region BUTTON CLICKS
@@ -126,6 +118,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         dialogBuilder.show();
     }
 
+//region DOUBLE BACK
     /* Fuer das schließen der APP mit doppel zurück click --> funkt allerdings nicht da (ich denke) von der Login auf die Profil gesprungen wird,
         da diese ja die start activity ist
     @Override
@@ -146,5 +139,5 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }, 2000);
     }
 */
-
+//endregion
 }

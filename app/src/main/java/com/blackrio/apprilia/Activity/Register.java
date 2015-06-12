@@ -1,5 +1,6 @@
 package com.blackrio.apprilia.Activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -95,21 +96,25 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
 
             //REGISTER CLICK
             case R.id.bRegister:
-                String firstname = etFirstname.getText().toString();
-                String lastname = etLastname.getText().toString();
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
-                String vehicleType = selectedVehicle;
-                Log.v("REgister:",selectedVehicle);
-                int kilometer = Integer.parseInt(etKilometer.getText().toString());
-                String registrationDate = etRegistrationDate.getText().toString();
+                if(!etRegistrationDate.getText().toString().matches("(\\d{4})-(\\d{2})-(\\d{2})")){
+                    showErrorMessage("please insert date format: YYYY-MM-DD");
+                }
+                else {
+                    String firstname = etFirstname.getText().toString();
+                    String lastname = etLastname.getText().toString();
+                    String username = etUsername.getText().toString();
+                    String password = etPassword.getText().toString();
+                    String vehicleType = selectedVehicle;
+                    Log.v("REgister:", selectedVehicle);
+                    int kilometer = Integer.parseInt(etKilometer.getText().toString());
+                    String registrationDate = etRegistrationDate.getText().toString();
 
 
-                //int age = Integer.parseInt(etAge.getText().toString());
+                    //int age = Integer.parseInt(etAge.getText().toString());
 
-                User user = new User(username, password, firstname, lastname, vehicleType, kilometer, registrationDate);
-                registerUser(user);
-
+                    User user = new User(username, password, firstname, lastname, vehicleType, kilometer, registrationDate);
+                    registerUser(user);
+                }
                 break;
         }
     }
@@ -127,4 +132,12 @@ public class Register extends ActionBarActivity implements View.OnClickListener{
         });
     }
     //endregion
+
+    private void showErrorMessage(String msg) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(Register.this);
+        dialogBuilder.setMessage(msg);
+        dialogBuilder.setPositiveButton("Ok", null);
+        dialogBuilder.show();
+    }
+
 }
