@@ -100,6 +100,7 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
+//region MENU LOGOUT
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -124,6 +125,7 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         }
         return super.onOptionsItemSelected(item);
     }
+//endregion
 
 
     @Override
@@ -154,7 +156,7 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
                                 userLocalStore.updateKilometer(updatedkm);
                                 Log.v("LOCALSTORE KM NEU: ", Integer.toString(userLocalStore.getLoggedInUser().getKilometer()));//TESTAUSGABE???
 
-                                tvCurrentKilometer.setText("Driven Kilometers: " + updatedkm);
+                                tvCurrentKilometer.setText("Driven Kilometers: \n\t" + updatedkm);
                                 showToastMessage("kilometer update successful");
                                 etUpdatedKilometer.setText("");
                                 etUpdatedKilometer.setHint("update kilometer here");
@@ -164,7 +166,7 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
                                 }
                                 //temp int damit calculateValue übergabeparameter funktioniert
                                 int temp = new Integer(kilometer);
-                                tvCurrentValue.setText("Current Value of Motorcycle: " + calculateValue(temp, curVehicle.getPrice() )+"€");
+                                tvCurrentValue.setText("Current Value of Motorcycle: \n\t" + calculateValue(temp, curVehicle.getPrice() )+"€");
                                 //kleines easter egg
                                 if(userLocalStore.getLoggedInUser().getKilometer() >= 300000){
                                     tvCurrentValue.setText("Bring your Motorcycle to the 'Ludolfs' and hope to get a scrap price!" );
@@ -196,7 +198,6 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
 
 
 //region STARTEN DES APP'S (onCreate)
-
     //Hol Alle Motorraeder aus der DB und storeVehiclesLocal
     private void storeVehiclesFromDB(){
         ServerRequests serverRequest = new ServerRequests(this);
@@ -246,12 +247,12 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         curVehicle = getCurVehicle(curUser.getVehicleType());
 
         tvHeader.setText("Welcome to APPrilia " + curUser.getFirstname() + " " + curUser.getLastname());
-        tvVehicle.setText("Motorcycle: "+ curVehicle.getBrand()+ " " + curVehicle.getType());
-        tvCurrentKilometer.setText("Driven Kilometers: " + curUser.getKilometer());
-        tvRegistrationDate.setText("Motorcycle Registration Date: " + curUser.getRegistrationDate());
+        tvVehicle.setText("MOTORCYCLE: \n \t"+ curVehicle.getBrand()+ " " + curVehicle.getType());
+        tvCurrentKilometer.setText("DRIVEN KILOMETERS: \n \t" + curUser.getKilometer());
+        tvRegistrationDate.setText("MOTORCYCLE REGISTRATION DATE: \n \t" + curUser.getRegistrationDate());
 
         //neupreis ist statisch daher in der class als private int abgespeichert!
-        tvCurrentValue.setText("Current Value of Motorcycle: " + calculateValue(userLocalStore.getLoggedInUser().getKilometer(), curVehicle.getPrice() )+"€");
+        tvCurrentValue.setText("RESIDUAL VALUE: \n \t" + calculateValue(userLocalStore.getLoggedInUser().getKilometer(), curVehicle.getPrice() )+"€");
         //kleines easter egg
         if(userLocalStore.getLoggedInUser().getKilometer() >= 300000){
             tvCurrentValue.setText("Bring your Motorcycle to the 'Ludolfs' and hope to get a scrap price!" );
@@ -277,21 +278,13 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
         sr.fetchServiceRecordDataAsyncTask(new GetServiceRecordCallback() {
             @Override
             public void done(ArrayList<ServiceRecord> serviceRecordList) {
-                storeServiceRecordsLocal(serviceRecordList);
+                //LOCAL STORE BEFUELLEN
+                serviceRecordLocalStore.storeServiceRecordData(serviceRecordList);
 
             }
         });
     }
-    //METHODE FUER TESTAUSGABE???
-    private void storeServiceRecordsLocal(ArrayList<ServiceRecord> serviceRecordList) {
-        serviceRecordLocalStore.storeServiceRecordData(serviceRecordList);
 
-        //TESTAUSGABE???
-        ArrayList<ServiceRecord> testSRList = serviceRecordLocalStore.getServiceRecordData(this);
-        for(ServiceRecord item : testSRList){
-            //Log.v("SR LOKAL LIST: ", item.getAction() + " " + item.getKilometer());
-        }
-    }
 //endregion
 
 
@@ -313,7 +306,9 @@ public class Profil extends AppCompatActivity implements View.OnClickListener{
     }
 //endregion
 
-    //region CALCULATIONS
+
+
+//region CALCULATIONS
 
     private int calculateValue(int km, int originalPrice)
     {

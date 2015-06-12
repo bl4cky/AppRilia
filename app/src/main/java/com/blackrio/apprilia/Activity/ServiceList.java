@@ -37,9 +37,6 @@ public class ServiceList extends AppCompatActivity implements View.OnClickListen
     private ArrayList<Vehicle> vehicleList;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

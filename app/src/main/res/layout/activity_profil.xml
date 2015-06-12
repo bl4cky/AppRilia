@@ -24,7 +24,8 @@
         android:layout_below="@+id/tvRegistrationDate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:textSize="17dp" />
 
 
     <TextView
@@ -35,7 +36,8 @@
         android:layout_marginTop="15dp"
         android:layout_below="@+id/tvCurrentKilometer"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textSize="17dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -45,7 +47,8 @@
         android:layout_marginTop="25dp"
         android:layout_below="@+id/tvHeader"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textSize="17dp" />
 
 
     <EditText
@@ -55,7 +58,7 @@
         android:hint="update kilometer here"
         android:inputType="number"
         android:ems="10"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/tvCurrentValue"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -100,5 +103,6 @@
         android:layout_below="@+id/tvVehicle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="15dp"
+        android:textSize="17dp" />
 </RelativeLayout>
